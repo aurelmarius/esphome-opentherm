@@ -7,6 +7,8 @@ from typing_extensions import NotRequired
 from esphome.const import (
     UNIT_CELSIUS,
     UNIT_PERCENT,
+    UNIT_KILOWATT,
+    UNIT_EMPTY,
     DEVICE_CLASS_COLD,
     DEVICE_CLASS_HEAT,
     DEVICE_CLASS_PRESSURE,
@@ -14,6 +16,7 @@ from esphome.const import (
     DEVICE_CLASS_TEMPERATURE,
     STATE_CLASS_MEASUREMENT,
     STATE_CLASS_TOTAL_INCREASING,
+    STATE_CLASS_NONE,
 )
 
 T = TypeVar("T")
@@ -307,6 +310,45 @@ SENSORS: Schema[SensorSchema] = Schema({
         "keep_updated": True,
         "message_data": "f88",
     }),
+    "max_capacity": SensorSchema({
+        "description": "Maximum boiler capacity (KW)",
+        "unit_of_measurement": UNIT_KILOWATT,
+        "accuracy_decimals": 0,
+        "state_class": STATE_CLASS_MEASUREMENT,
+        "message": "MaxCapacityMinModLevel",
+        "keep_updated": False,
+        "message_data": "u8_hb",
+    }),
+    "min_mod_level": SensorSchema({
+        "description": "Minimum modulation level",
+        "unit_of_measurement": UNIT_PERCENT,
+        "accuracy_decimals": 0,
+        "icon": "mdi:percent",
+        "state_class": STATE_CLASS_MEASUREMENT,
+        "message": "MaxCapacityMinModLevel",
+        "keep_updated": False,
+        "message_data": "u8_lb",
+    }),
+    "slave_type": SensorSchema({
+        "description": "Slave product type",
+        "unit_of_measurement": UNIT_EMPTY,
+        "accuracy_decimals": 0,
+        "icon": "mdi:percent",
+        "state_class": STATE_CLASS_NONE,
+        "message": "SlaveVersion",
+        "keep_updated": False,
+        "message_data": "u8_hb",
+    }),
+    "slave_version": SensorSchema({
+        "description": "Slave product version",
+        "unit_of_measurement": UNIT_EMPTY,
+        "accuracy_decimals": 0,
+        "icon": "mdi:percent",
+        "state_class": STATE_CLASS_NONE,
+        "message": "SlaveVersion",
+        "keep_updated": False,
+        "message_data": "u8_lb",
+    }),
 })
 
 class BinarySensorSchema(EntitySchema):
@@ -426,6 +468,46 @@ BINARY_SENSORS: Schema = Schema({
         "message": "RBPflags",
         "keep_updated": False,
         "message_data": "flag8_lb_1",
+    }),
+    "service_request": BinarySensorSchema({
+        "description": "Service Request",
+        "message": "ASFflags",
+        "keep_updated": True,
+        "message_data": "flag8_hb_0",
+    }),
+    "lockout_reset": BinarySensorSchema({
+        "description": "Lockout Reset",
+        "message": "ASFflags",
+        "keep_updated": True,
+        "message_data": "flag8_hb_1",
+    }),
+    "low_water_pressure": BinarySensorSchema({
+        "device_class": DEVICE_CLASS_PROBLEM,
+        "description": "Low Water Pressure",
+        "message": "ASFflags",
+        "keep_updated": True,
+        "message_data": "flag8_hb_2",
+    }),
+    "flame_fault": BinarySensorSchema({
+        "device_class": DEVICE_CLASS_PROBLEM,
+        "description": "Gas/Flame Fault",
+        "message": "ASFflags",
+        "keep_updated": True,
+        "message_data": "flag8_hb_3",
+    }),
+    "air_pressure_fault": BinarySensorSchema({
+        "device_class": DEVICE_CLASS_PROBLEM,
+        "description": "Air Pressure Fault",
+        "message": "ASFflags",
+        "keep_updated": True,
+        "message_data": "flag8_hb_4",
+    }),
+    "water_over_temperature": BinarySensorSchema({
+        "device_class": DEVICE_CLASS_PROBLEM,
+        "description": "Water Over Temperature",
+        "message": "ASFflags",
+        "keep_updated": True,
+        "message_data": "flag8_hb_5",
     }),
 })
 
